@@ -584,17 +584,21 @@ form .gError,
 
 /* Thumb Menu  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-.gItem .gMenu {
+#gContent .gThumbMenu {
   bottom: 0;
-  margin-bottom: -2px;
+  left: 0;
   position: absolute;
-  right: 0;
+  width: 100%;
 }
 
-.gItem .gMenu li {
-  font-weight: normal !important;
+#gContent .gThumbMenu li {
+  border-left: none;
+  border-right: none;
 }
 
+#gContent .gThumbMenu a:hover {
+  text-decoration: none;
+}
 /* View Menu  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #gViewMenu {
@@ -895,24 +899,20 @@ form .gError,
 
 /* Server Add */
 
-.gCheckboxTree input {
-  display: inline;
+#gServerAddTree {
+  cursor: pointer;
 }
 
-.gCheckboxTree li {
+#gServerAddTree li {
   padding: 0;
   float: none;
 }
 
-.gCheckboxTree .ui-icon {
-  cursor: pointer;
+#gServerAddTree span.selected {
+  background: #ddd;
 }
 
-.gFile {
-  padding-left: 2.5em;
-}
-
-#gServerAdd #gServerAddTree {
+#gServerAddTree {
   border: 1px solid #ccc;
   height: 25em;
   overflow: auto;
@@ -923,10 +923,6 @@ form .gError,
 
 #gServerAdd ul ul li {
   padding-left: 1.2em;
-}
-
-#gServerAdd ul li .gFile {
-  padding-left: 2.5em;
 }
 
 #gServerAdd .gBreadcrumbs {
