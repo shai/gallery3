@@ -93,6 +93,7 @@ class Item_Model extends ORM_MPTT {
   }
 
   public function delete() {
+    $old = clone $this;
     module::event("item_before_delete", $this);
 
     $parent = $this->parent();
@@ -114,6 +115,8 @@ class Item_Model extends ORM_MPTT {
       @unlink($resize_path);
       @unlink($thumb_path);
     }
+
+    module::event("item_deleted", $old);
   }
 
   /**
@@ -347,9 +350,14 @@ class Item_Model extends ORM_MPTT {
         $this->created = $this->updated;
         $r = ORM::factory("item")->select("MAX(weight) as max_weight")->find();
         $this->weight = $r->max_weight + 1;
+        $created = 1;
       }
     }
-    return parent::save();
+    parent::save();
+    if (!isset($created)) {
+      module::event("item_updated", $this);
+    }
+    return $this;
   }
 
   /**
