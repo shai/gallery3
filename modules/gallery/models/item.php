@@ -122,8 +122,8 @@ class Item_Model extends ORM_MPTT {
   /**
    * Move this item to the specified target.
    * @chainable
-   * @param   Item_Model $target  Target item (must be an album
-   * @return  ORM_MTPP
+   * @param   Item_Model $target  Target item (must be an album)
+   * @return  ORM_MPTT
    */
   function move_to($target) {
     if (!$target->is_album()) {
@@ -137,8 +137,10 @@ class Item_Model extends ORM_MPTT {
     $original_path = $this->file_path();
     $original_resize_path = $this->resize_path();
     $original_thumb_path = $this->thumb_path();
+    $original_parent = $this->parent();
 
     parent::move_to($target, true);
+    model_cache::clear();
     $this->relative_path_cache = null;
 
     rename($original_path, $this->file_path());
@@ -154,6 +156,7 @@ class Item_Model extends ORM_MPTT {
       @rename($original_thumb_path, $this->thumb_path());
     }
 
+    module::event("item_moved", $this, $original_parent);
     return $this;
   }
 
@@ -350,11 +353,12 @@ class Item_Model extends ORM_MPTT {
         $this->created = $this->updated;
         $r = ORM::factory("item")->select("MAX(weight) as max_weight")->find();
         $this->weight = $r->max_weight + 1;
-        $created = 1;
+      } else {
+        $send_event = 1;
       }
     }
     parent::save();
-    if (!isset($created)) {
+    if (isset($send_event)) {
       module::event("item_updated", $this);
     }
     return $this;

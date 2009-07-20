@@ -17,34 +17,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
-class gallery_event_Core {
-  static function group_created($group) {
-    access::add_group($group);
-  }
-
-  static function group_deleted($group) {
-    access::delete_group($group);
-  }
-
-  static function item_created($item) {
-    access::add_item($item);
-  }
-
-  static function item_deleted($item) {
-    access::delete_item($item);
-  }
-
-  static function item_moved($item, $old_parent) {
-    access::recalculate_permissions($item->parent());
-  }
-
-  static function user_login($user) {
-    // If this user is an admin, check to see if there are any post-install tasks that we need
-    // to run and take care of those now.
-    if ($user->admin && module::get_var("gallery", "choose_default_tookit", null)) {
-      graphics::choose_default_toolkit();
-      module::clear_var("gallery", "choose_default_tookit");
-    }
+class tag_search_Core {
+  static function item_index_data($item) {
+    return join(" ", tag::item_tags($item));
   }
 }
